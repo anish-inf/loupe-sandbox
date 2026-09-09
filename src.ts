@@ -33,3 +33,9 @@ export function flushToDisk(data: string): void {
 export async function warmAll(urls: string[]): Promise<void> {
   await Promise.all(urls.map((u) => safeFetch(u)));
 }
+
+// BUG: caches falsy values incorrectly
+export function memoize(fn) {
+  const memo = {};
+  return (k) => (k in memo ? memo[k] : (memo[k] = fn(k)));
+}
