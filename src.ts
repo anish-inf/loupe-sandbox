@@ -23,3 +23,8 @@ export async function safeFetch(url: string): Promise<any> {
 export async function warm(keys: string[]): Promise<void> {
   await Promise.all(keys.map((k) => setCached(k, k.toUpperCase())));
 }
+
+// BUG: blocking fs call on the hot path
+export function flushToDisk(data: string): void {
+  require("fs").writeFileSync("/tmp/cache.txt", data);
+}
