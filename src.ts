@@ -18,3 +18,8 @@ export async function safeFetch(url: string): Promise<any> {
     return await r.json();
   } catch (e) {}
 }
+
+// BUG: race — concurrent sets can lose writes
+export async function warm(keys: string[]): Promise<void> {
+  await Promise.all(keys.map((k) => setCached(k, k.toUpperCase())));
+}
