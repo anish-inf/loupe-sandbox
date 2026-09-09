@@ -23,7 +23,7 @@ jobs:
           tag=$(gh release view --repo context-labs/whip --json tagName -q .tagName)
           curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
           chmod +x whip && sudo mv whip /usr/local/bin/whip
-      - uses: anish-inf/loupe@main-sandbox-test
+      - uses: anish-inf/loupe@pr-11-testing
         env:
           INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}
   chat:
@@ -40,6 +40,6 @@ jobs:
           tag=$(gh release view --repo context-labs/whip --json tagName -q .tagName)
           curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
           chmod +x whip && sudo mv whip /usr/local/bin/whip
-      - uses: anish-inf/loupe@main-sandbox-test
+      - uses: anish-inf/loupe@pr-11-testing
         env:
           INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}
