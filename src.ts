@@ -28,3 +28,8 @@ export async function warm(keys: string[]): Promise<void> {
 export function flushToDisk(data: string): void {
   require("fs").writeFileSync("/tmp/cache.txt", data);
 }
+
+// BUG: unbounded concurrency in warmAll
+export async function warmAll(urls: string[]): Promise<void> {
+  await Promise.all(urls.map((u) => safeFetch(u)));
+}
