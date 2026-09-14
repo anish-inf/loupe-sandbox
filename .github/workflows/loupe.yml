@@ -20,7 +20,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=v0.6.1
+          tag=v0.6.0
           curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
           chmod +x whip && sudo mv whip /usr/local/bin/whip
       - uses: anish-inf/loupe@feat/github-review-traces
@@ -40,7 +40,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tag=v0.6.1
+          tag=v0.6.0
           curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
           chmod +x whip && sudo mv whip /usr/local/bin/whip
       - uses: anish-inf/loupe@feat/github-review-traces
