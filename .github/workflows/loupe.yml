@@ -1,0 +1,60 @@
+name: loupe
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: loupe-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
+  cancel-in-progress: false
+
+jobs:
+  review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install whip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=v0.6.0
+          curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
+          chmod +x whip && sudo mv whip /usr/local/bin/whip
+      - uses: anish-inf/loupe@feature/combined-summary-fix-all
+        with:
+          config: .loupe.json
+          full: true
+          model: kimi-k3-fast
+        env:
+          INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}
+
+  chat:
+    if: github.event_name != 'pull_request' && contains(github.event.comment.body, '@loupe')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Install whip
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=v0.6.0
+          curl -fsSL -o whip "https://github.com/context-labs/whip/releases/download/${tag}/whip-linux-x64"
+          chmod +x whip && sudo mv whip /usr/local/bin/whip
+      - uses: anish-inf/loupe@feature/combined-summary-fix-all
+        with:
+          config: .loupe.json
+          full: true
+          model: kimi-k3-fast
+        env:
+          INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}

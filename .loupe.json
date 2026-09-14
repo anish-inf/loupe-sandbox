@@ -1,0 +1,21 @@
+{
+  "profile": "assertive",
+  "verify": false,
+  "reviewers": [
+    {
+      "name": "correctness",
+      "include": ["src.ts"],
+      "prompt": "Review runtime correctness, asynchronous behavior, and error handling. Report only concrete defects."
+    },
+    {
+      "name": "security",
+      "include": ["src.ts"],
+      "prompt": "Review input trust boundaries, path handling, and information exposure. Report only concrete security defects."
+    },
+    {
+      "name": "maintainability",
+      "include": ["src.ts"],
+      "prompt": "Review resource lifecycle and operational reliability. Report only defects with concrete runtime consequences."
+    }
+  ]
+}
