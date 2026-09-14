@@ -27,6 +27,7 @@ jobs:
         with:
           config: .loupe.json
           full: true
+          model: kimi-k3-fast
         env:
           INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}
   chat:
@@ -47,5 +48,6 @@ jobs:
         with:
           config: .loupe.json
           full: true
+          model: kimi-k3-fast
         env:
           INFERENCE_API_KEY: ${{ secrets.INFERENCE_API_KEY }}
