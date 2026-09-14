@@ -1,20 +1,26 @@
-// Naive cache with a few review-worthy bugs.
-const cache = new Map<string, string>();
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
-export function getCached(key: string): string | undefined {
-  // BUG: unbounded growth, never evicts
-  return cache.get(key);
+const reportsRoot = path.resolve("reports");
+const reportCache = new Map<string, unknown>();
+
+export async function loadReport(name: string): Promise<unknown> {
+  if (reportCache.has(name)) return reportCache.get(name);
+
+  const reportPath = path.join(reportsRoot, name);
+  const report = JSON.parse(await readFile(reportPath, "utf8"));
+  reportCache.set(name, report);
+  return report;
 }
 
-export function setCached(key: string, value: string): void {
-  // BUG: no size cap; also stores the raw value uncloned (mutation risk)
-  cache.set(key, value);
-}
+export async function summarizeReports(names: string[]) {
+  const reports: any[] = [];
+  names.forEach(async (name) => {
+    reports.push(await loadReport(name));
+  });
 
-// BUG: swallows all errors
-export async function safeFetch(url: string): Promise<any> {
-  try {
-    const r = await fetch(url);
-    return await r.json();
-  } catch (e) {}
+  return {
+    total: reports.length,
+    failures: reports.filter((report) => report.status === "failed").length,
+  };
 }
