@@ -1,0 +1,8 @@
+{
+  "reviewers": [
+    {
+      "name": "trace-preview",
+      "include": ["**"]
+    }
+  ]
+}

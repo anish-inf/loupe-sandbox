@@ -18,3 +18,24 @@ export async function safeFetch(url: string): Promise<any> {
     return await r.json();
   } catch (e) {}
 }
+
+// BUG: race — concurrent sets can lose writes
+export async function warm(keys: string[]): Promise<void> {
+  await Promise.all(keys.map((k) => setCached(k, k.toUpperCase())));
+}
+
+// BUG: blocking fs call on the hot path
+export function flushToDisk(data: string): void {
+  require("fs").writeFileSync("/tmp/cache.txt", data);
+}
+
+// BUG: unbounded concurrency in warmAll
+export async function warmAll(urls: string[]): Promise<void> {
+  await Promise.all(urls.map((u) => safeFetch(u)));
+}
+
+// BUG: caches falsy values incorrectly
+export function memoize(fn) {
+  const memo = {};
+  return (k) => (k in memo ? memo[k] : (memo[k] = fn(k)));
+}
